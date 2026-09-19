@@ -1,0 +1,5 @@
+<ref>/logic/element/run</ref>
+	<forked_exec>
+		<entry name="execution_group"><var>channel</var></entry>
+		<viz>RENDERER*TREE*$SCRIPT*SCRIPT INVOKE msg_director_take <ref><var>element</var>/data/SetBoxes/SetBoxes</ref></viz>
+	</forked_exec>

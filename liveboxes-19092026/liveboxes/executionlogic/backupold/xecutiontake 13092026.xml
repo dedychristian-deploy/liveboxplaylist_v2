@@ -1,0 +1,17 @@
+<env>
+		<def var="elementID">
+			<var>element</var>
+		</def>
+		<def var="boxType">
+			<ref><var>element</var>/data/SetBoxes/SetBoxes</ref>
+		</def>
+		<log>ELEMENT = <var>elementID</var></log>
+		<log>BOXTYPE = <var>boxType</var></log>
+		<ref>/logic/element/run</ref>
+		<forked_exec>
+			<entry name="execution_group">
+				<var>channel</var>
+			</entry>
+			<viz>RENDERER*TREE*$SCRIPT*SCRIPT INVOKE msg_director_take <var>elementID</var>|<var>boxType</var></viz>
+		</forked_exec>
+	</env>

@@ -1,0 +1,79 @@
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:vaext="http://www.vizrt.com/atom-ext">
+    <id>urn:uuid:6c1980ef-3509-4c9b-951b-c340d789677e</id>
+    <summary>Profile LIVEBOXES</summary>
+    <title>LIVEBOXES</title>
+    <author>
+        <name>Media Sequencer</name>
+    </author>
+    <updated>2026-08-21T14:18:38Z</updated>
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES" rel="self" type="application/atom+xml;type=entry" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/" rel="alternate"
+        type="application/vnd.vizrt.payload+xml;type=profile" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/cleanup" rel="cleanup" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/continue" rel="continue" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/continue_reverse" rel="continue_reverse" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/cue" rel="cue" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/cut" rel="cut" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/initialize" rel="initialize" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/initialize_and_set_renderer"
+        rel="initialize_and_set_renderer" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/out" rel="out" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/prepare" rel="prepare" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/read" rel="read" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/stop" rel="stop" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/take" rel="take" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/update" rel="update" />
+    <link href="http://127.0.0.1:8580/profiles/LIVEBOXES/state"
+        rel="http://schema.vizrt.com/relations/2016/profilestate" />
+    <content type="application/vnd.vizrt.payload+xml">
+        <payload xmlns="http://www.vizrt.com/types" model="http://127.0.0.1:8580/models/profile">
+            <field name="name">
+                <value>LIVEBOXES</value>
+            </field>
+            <field name="channels">
+                <list>
+                    <payload xmlns="http://www.vizrt.com/types">
+                        <field name="name">
+                            <value>LIVEBOX</value>
+                        </field>
+                        <field name="video-role">
+                            <value>normal</value>
+                        </field>
+                        <field name="viz-role">
+                            <value>normal</value>
+                        </field>
+                        <field name="outputs">
+                            <list>
+                                <payload xmlns="http://www.vizrt.com/types">
+                                    <field name="output">
+                                        <value>http://127.0.0.1:8580/output/viz_background_s</value>
+                                    </field>
+                                </payload>
+                            </list>
+                        </field>
+                    </payload>
+                    <payload xmlns="http://www.vizrt.com/types">
+                        <field name="name">
+                            <value>PREVIEW</value>
+                        </field>
+                        <field name="video-role">
+                            <value>normal</value>
+                        </field>
+                        <field name="viz-role">
+                            <value>normal</value>
+                        </field>
+                        <field name="outputs">
+                            <list>
+                                <payload xmlns="http://www.vizrt.com/types">
+                                    <field name="output">
+                                        <value>http://127.0.0.1:8580/output/viz_background_u</value>
+                                    </field>
+                                </payload>
+                            </list>
+                        </field>
+                    </payload>
+                </list>
+            </field>
+        </payload>
+    </content>
+</entry>
