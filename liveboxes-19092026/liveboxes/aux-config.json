@@ -1,0 +1,16 @@
+{
+    "aux": [
+        { "url": "http://127.0.0.1:8889/aux1?autoplay=true&muted=true&controls=false", "type": "iframe", "enabled": false },
+        { "url": "http://127.0.0.1:8889/aux2?autoplay=true&muted=true&controls=false", "type": "iframe", "enabled": false },
+        { "url": "http://127.0.0.1:8889/aux3?autoplay=true&muted=true&controls=false", "type": "iframe", "enabled": false },
+        { "url": "http://127.0.0.1:8889/aux4?autoplay=true&muted=true&controls=false", "type": "iframe", "enabled": false },
+        { "url": "http://127.0.0.1:8889/aux5?autoplay=true&muted=true&controls=false", "type": "iframe", "enabled": false },
+        { "url": "http://127.0.0.1:8889/aux6?autoplay=true&muted=true&controls=false", "type": "iframe", "enabled": false },
+        { "url": "http://127.0.0.1:8889/aux7?autoplay=true&muted=true&controls=false", "type": "iframe", "enabled": false },
+        { "url": "http://127.0.0.1:8889/aux8?autoplay=true&muted=true&controls=false", "type": "iframe", "enabled": false },
+        { "url": "http://127.0.0.1:8889/aux8?autoplay=true&muted=true&controls=false", "type": "iframe", "enabled": false },
+        { "url": "http://127.0.0.1:8889/aux8?autoplay=true&muted=true&controls=false", "type": "iframe", "enabled": false },
+        { "url": "http://127.0.0.1:8889/aux8?autoplay=true&muted=true&controls=false", "type": "iframe", "enabled": false },
+        { "url": "http://127.0.0.1:8889/aux8?autoplay=true&muted=true&controls=false", "type": "iframe", "enabled": false }
+    ]
+}

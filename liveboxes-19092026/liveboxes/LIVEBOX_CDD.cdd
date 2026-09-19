@@ -1,0 +1,9 @@
+@echo off
+
+start "" "http://127.0.0.1:9091/mse?studio=cdd"
+
+timeout /t 2 /nobreak >nul
+
+powershell -command "$wshell = New-Object -ComObject WScript.Shell; $wshell.SendKeys('{F11}')"
+
+exit

@@ -1,0 +1,44 @@
+<env name="director_reset">
+		<http_request>
+			<method>POST</method>
+			<uri>http://127.0.0.1:9091/api/director-reset</uri>
+			<headers>
+				<field>
+					<name>Content-Type</name>
+					<value>text/plain</value>
+				</field>
+			</headers>
+			<body><![CDATA[director|]]><ref><var>element</var></ref><![CDATA[]]></body>
+			<on_response>
+				<log>Director reset sent</log>
+				<log>
+					<var>body</var>
+				</log>
+			</on_response>
+		</http_request>
+	</env>
+
+	<!-- Keeps the liveboxes web app's lastTakenElementId in sync with what
+	     Director actually just took (see /api/send_elementid in
+	     mseservice/routes.js) - director_reset above only resyncs Viz
+	     Engine's own script state, it never told the browser which element
+	     was taken. -->
+	<env name="send_elementid">
+		<http_request>
+			<method>POST</method>
+			<uri>http://127.0.0.1:9091/api/send_elementid</uri>
+			<headers>
+				<field>
+					<name>Content-Type</name>
+					<value>text/plain</value>
+				</field>
+			</headers>
+			<body><![CDATA[director|]]><var>element</var><![CDATA[]]></body>
+			<on_response>
+				<log>Element id sent</log>
+				<log>
+					<var>body</var>
+				</log>
+			</on_response>
+		</http_request>
+	</env>

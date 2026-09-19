@@ -1,0 +1,15 @@
+function activatePlaylist(uuid, studio) {
+    const { MSE_URL, MSE_PROFILE } = getMseConfig(studio);
+
+    const body = `<playlistactivation>
+  <active_on_profile>${MSE_URL}/profiles/${MSE_PROFILE}</active_on_profile>
+</playlistactivation>`;
+
+    return request(`${MSE_URL}/activation/storage/playlists/${uuid}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/vnd.vizrt.playlistactivation+xml"
+        },
+        body
+    });
+}

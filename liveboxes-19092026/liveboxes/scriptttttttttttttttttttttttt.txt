@@ -1,0 +1,426 @@
+dim a as String
+dim b as Integer
+dim lastElementID as String = ""
+dim wasLayoutEdited as Boolean = false
+
+sub setter()
+    Stage.FindDirector("SWITCH").FindActionChannel("ACT").FindKeyframe("ACT").ActionString = "THIS_DIRECTOR SHOW 0;"
+end sub
+
+sub setterreset()
+    Stage.FindDirector("SWITCH").FindActionChannel("ACT").FindKeyframe("ACT").ActionString = ""
+end sub
+
+sub OnInit()
+        for i = 0 to 19
+         reorder_clear(i)
+         next
+end sub
+
+sub print_order(boxType as Integer)
+    dim c as Container
+    dim i as Integer
+
+    c = Scene.FindContainer("BOX_LAYOUTS").GetChildContainerByIndex(boxType)
+
+    if not c.Valid then
+        exit sub
+    end if
+
+    println "===== ORDER ====="
+
+    for i = 0 to c.ChildContainerCount - 1
+        println CStr(i) & " = " & c.GetChildContainerByIndex(i).Name
+    next
+end sub
+
+sub apply_layout_live(boxType as Integer, boxData as String)
+    println "===== APPLY LAYOUT ====="
+    println "BOX TYPE = " & CStr(boxType)
+    println "BOX DATA = " & boxData
+
+    reorder_edited_fast(boxType, boxData)
+
+    Scene.FindContainer("BOX_LAYOUTS").ScriptPluginInstance.SetParameterInt("idxLayout",boxType)
+    Scene.FindContainer("BOX_LAYOUTS").ScriptPluginInstance.Script.Execute()
+
+    println "===== EDITED FINAL ====="
+end sub
+
+sub exec_msg_layout_edited()
+    dim bundle as Array[String]
+    dim boxType as Integer
+    dim boxData as String
+
+    if a = "" then
+        println "===== NO EDITED DATA - SKIP ====="
+        exit sub
+    end if
+
+    println "===== EXEC EDITED ====="
+    println "DATA = " & a
+
+    a.Split("|", bundle)
+
+    if bundle.Size <> 2 then
+        println "INVALID EDITED DATA"
+        exit sub
+    end if
+
+    boxType = CInt(bundle[0])
+    boxData = bundle[1]
+
+    apply_layout_live(boxType, boxData)
+
+    a = ""
+
+    'Stage.FindDirector("SWITCH").StartAnimation()
+end sub
+
+sub msg_layout_edited(dataLayout as String)
+
+    wasLayoutEdited = true
+
+    a = dataLayout
+
+    println "===== HTML EDITED RECEIVED ====="
+    println "A SAVED = " & a
+
+    exec_msg_layout_edited()
+
+end sub
+
+sub reorder_edited_fast(boxType as Integer, boxData as String)
+
+    dim c as Container
+    dim box as Container
+    dim target as Container
+
+    dim items as Array[String]
+    dim pair as Array[String]
+
+    dim i as Integer
+    dim targetScan as Integer
+    dim targetIndex as Integer
+    dim currentIndex as Integer
+
+    dim boxName as String
+
+    println "===== REORDER EDITED TARGETED ====="
+    println "BOX TYPE = " & CStr(boxType)
+    println "BOX DATA = " & boxData
+
+    c = Scene.FindContainer("BOX_LAYOUTS").GetChildContainerByIndex(boxType)
+
+    if not c.Valid then
+        println "INVALID LAYOUT"
+        exit sub
+    end if
+
+    boxData.Split(",", items)
+
+
+    ' ============================================
+    ' TARGET TERBESAR -> TERKECIL
+    '
+    ' Contoh:
+    ' BOX_01:6
+    ' BOX_02:7
+    '
+    ' Kerjakan:
+    ' BOX_02 -> 7
+    ' BOX_01 -> 6
+    ' ============================================
+
+    for targetScan = c.ChildContainerCount - 1 to 0 step -1
+
+        for i = 0 to items.Size - 1
+
+            pair.Clear()
+            items[i].Split(":", pair)
+
+            if pair.Size = 2 then
+
+                boxName = pair[0]
+                targetIndex = CInt(pair[1])
+
+                if targetIndex = targetScan then
+
+                    box = c.FindSubContainer(boxName)
+
+                    if box.Valid then
+
+                        ' BACA POSISI AKTUAL
+                        ' Jangan pakai posisi yang disimpan sebelumnya
+                        currentIndex = box.GetLocalIndex()
+
+
+                        if currentIndex <> targetIndex then
+
+                            target = c.GetChildContainerByIndex(targetIndex)
+
+                            if target.Valid then
+
+                                if currentIndex > targetIndex then
+
+                                    println "MOVE PREVIOUS " & boxName
+
+                                    box.MoveTo(target, TL_PREVIOUS)
+
+                                else
+
+                                    println "MOVE NEXT " & boxName
+
+                                    box.MoveTo(target, TL_NEXT)
+
+                                end if
+
+                            end if
+
+                        else
+
+                            println "KEEP " & boxName
+
+                        end if
+
+                    end if
+
+                    exit for
+
+                end if
+
+            end if
+
+        next
+
+    next
+
+
+    ' ============================================
+    ' VERIFY / CORRECT
+    ' ============================================
+    
+    dim pass as Integer
+    dim allCorrect as Boolean
+    
+    for pass = 0 to items.Size
+    
+        allCorrect = true
+    
+        for i = 0 to items.Size - 1
+    
+            pair.Clear()
+            items[i].Split(":", pair)
+    
+            if pair.Size = 2 then
+    
+                boxName = pair[0]
+                targetIndex = CInt(pair[1])
+    
+                box = c.FindSubContainer(boxName)
+    
+                if box.Valid then
+    
+                    currentIndex = box.GetLocalIndex()
+    
+                    if currentIndex <> targetIndex then
+    
+                        allCorrect = false
+    
+                        target = c.GetChildContainerByIndex(targetIndex)
+    
+
+    
+                        if currentIndex > targetIndex then
+                            box.MoveTo(target, TL_PREVIOUS)
+                        else
+                            box.MoveTo(target, TL_NEXT)
+                        end if
+    
+                    end if
+    
+                end if
+    
+            end if
+    
+        next
+    
+        if allCorrect then
+            println "ORDER VERIFIED"
+            exit for
+        end if
+    
+    next
+    
+    Scene.UpdateSceneTree()
+    'Scene.UpdateSceneTree()
+
+    println "===== REORDER TARGETED DONE ====="
+
+    print_order(boxType)
+
+end sub
+
+
+sub msg_director_take(data as String)
+
+    dim parts as Array[String]
+    dim elementID as String
+    dim boxType as Integer
+
+    println "RAW = " & data
+
+    data.Split("|", parts)
+
+    if parts.Size <> 2 then
+        println "INVALID DATA"
+        exit sub
+    end if
+
+    elementID = parts[0]
+    boxType = CInt(parts[1])
+
+    println "ELEMENT ID = " & elementID
+    println "LAST ELEMENT ID = " & lastElementID
+    println "BOX TYPE = " & CStr(boxType)
+    println "WAS EDITED = " & CStr(wasLayoutEdited)
+
+    ' SAME ELEMENT
+    if elementID = lastElementID then
+
+        println "SAME ELEMENT"
+
+        reorder_clear_same_element(boxType)
+
+        wasLayoutEdited = false
+
+        exit sub
+    end if
+
+
+    ' NEW ELEMENT AFTER EDIT
+    if wasLayoutEdited then
+
+        println "NEW ELEMENT AFTER EDIT"
+
+        lastElementID = elementID
+
+        reorder_clear_same_element(boxType)
+
+        wasLayoutEdited = false
+
+        exit sub
+    end if
+
+
+    ' NEW ELEMENT NORMAL
+    println "NEW ELEMENT NORMAL"
+
+    lastElementID = elementID
+
+    reorder_clear(boxType)
+
+end sub
+
+sub reorder_clear_same_element(boxType as Integer)
+    dim c as Container
+    dim box as Container
+    dim i as Integer
+    dim boxName as String
+
+    println "===== REORDER CLEAR ====="
+    println "BOX TYPE = " & CStr(boxType)
+
+    c = Scene.FindContainer("BOX_LAYOUTS").GetChildContainerByIndex(boxType)
+
+    if not c.Valid then
+        println "INVALID LAYOUT INDEX = " & CStr(boxType)
+        exit sub
+    end if
+
+    ' Restore BOX_01 ... BOX_12 order
+    for i = 12 to 1 step -1
+        if i < 10 then
+            boxName = "BOX_0" & CStr(i)
+        else
+            boxName = "BOX_" & CStr(i)
+        end if
+
+        box = c.FindSubContainer(boxName)
+
+        if box.Valid then
+            println "ORDER " & boxName
+            box.MoveTo(c, TL_DOWN)
+        end if
+    next
+
+    Scene.FindContainer("BOX_LAYOUTS").ScriptPluginInstance.SetParameterInt("idxLayout",boxType)
+    Scene.FindContainer("BOX_LAYOUTS").ScriptPluginInstance.Script.Execute()
+
+    Scene.UpdateSceneTree()
+
+    println "===== REORDER CLEAR DONE ====="
+    print_order(boxType)
+end sub
+
+sub reorder_clear(boxType as Integer)
+    dim c as Container
+    dim box as Container
+    dim i as Integer
+    dim boxName as String
+
+    println "===== REORDER CLEAR ====="
+    println "BOX TYPE = " & CStr(boxType)
+
+    c = Scene.FindContainer("BOX_LAYOUTS").GetChildContainerByIndex(boxType)
+
+    if not c.Valid then
+        println "INVALID LAYOUT INDEX = " & CStr(boxType)
+        exit sub
+    end if
+
+    ' Restore BOX_01 ... BOX_12 order
+    for i = 12 to 1 step -1
+        if i < 10 then
+            boxName = "BOX_0" & CStr(i)
+        else
+            boxName = "BOX_" & CStr(i)
+        end if
+
+        box = c.FindSubContainer(boxName)
+
+        if box.Valid then
+            println "ORDER " & boxName
+            box.MoveTo(c, TL_DOWN)
+        end if
+    next
+
+    Scene.FindContainer("BOX_LAYOUTS").ScriptPluginInstance.SetParameterInt("idxLayout",boxType)
+    'check element
+    'Scene.FindContainer("BOX_LAYOUTS").ScriptPluginInstance.Script.Execute()
+
+    Scene.UpdateSceneTree()
+
+    println "===== REORDER CLEAR DONE ====="
+    print_order(boxType)
+end sub
+
+sub OnInitParameters()
+    RegisterPushButton("reset","RESET DEFAULT",0)
+    RegisterPushButton("edited","EDITED RELAYOUT",1)
+    RegisterPushButton("exec","EXECUTE",2)
+end sub
+
+sub OnExecAction(buttonId As Integer)
+    if buttonId = 0 then
+        OnInit()
+
+         
+         'reorder_clear(1)
+    elseif buttonId = 1 then
+        exec_msg_layout_edited()
+    elseif buttonId = 2 then
+        println "AAA"
+        msg_layout_edited("3|BOX_01:0,BOX_02:1,BOX_03:3")
+    end if
+end sub

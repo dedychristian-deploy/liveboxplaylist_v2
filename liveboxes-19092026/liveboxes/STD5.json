@@ -1,0 +1,32 @@
+{
+  "mse": {
+    "host": "127.0.0.1",
+    "port": 8580,
+    "profile": "LIVEBOXES",
+    "profilepreview": "PREVIEW"
+  },
+  "engine": {
+    "host": "127.0.0.1",
+    "port": 6100
+  },
+  "enginepreview": {
+    "host": "127.0.0.1",
+    "port": 6200
+  },
+  "pilotserver": {
+    "host": "127.0.0.1",
+    "port": 8177
+  },
+  "playlist": {
+    "playlistid": "{16484B15-681F-4A22-8BC9-71EACF401681}"
+  },
+  "template": {
+    "templateid": "10055"
+  },
+  "director": {
+    "enabled": false
+  },
+  "interaction": {
+    "mode": "desktop"
+  }
+}
