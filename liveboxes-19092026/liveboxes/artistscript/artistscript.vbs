@@ -216,15 +216,15 @@ sub reorder_edited_fast(boxType as Integer, boxData as String)
 end sub
 
 sub msg_director_take(data as String)
-    editStatus = 1
+editStatus = 1
     dim parts as Array[String]
     dim elementID as String
     dim boxType as Integer
 
-    println "===== MSG DIRECTOR TAKE ====="
     println "RAW = " & data
 
     data.Split("|", parts)
+
     if parts.Size <> 2 then
         println "INVALID DATA"
         exit sub
@@ -238,24 +238,44 @@ sub msg_director_take(data as String)
     println "BOX TYPE = " & CStr(boxType)
     println "WAS EDITED = " & CStr(wasLayoutEdited)
 
-    if wasLayoutEdited then
-        println "TAKE AFTER EDIT - KEEP EDITED ORDER"
-        lastElementID = elementID
+
+    ' SAME ELEMENT
+    if elementID = lastElementID then
+
+        println "SAME ELEMENT"
+
+        reorder_clear_same_element(boxType)
+
         wasLayoutEdited = false
-        ' exit sub
+
+        'exit sub
+
     end if
 
-    ' SAME ELEMENT NORMAL
-    if elementID = lastElementID then
-        println "SAME ELEMENT NORMAL"
+
+    ' NEW ELEMENT AFTER EDIT
+    if wasLayoutEdited then
+
+        println "NEW ELEMENT AFTER EDIT"
+
+        lastElementID = elementID
+
         reorder_clear_same_element(boxType)
+
+        wasLayoutEdited = false
+
         exit sub
+
     end if
+
 
     ' NEW ELEMENT NORMAL
     println "NEW ELEMENT NORMAL"
+
     lastElementID = elementID
+
     reorder_clear(boxType)
+
 end sub
 
 sub reorder_clear_same_element(boxType as Integer)
